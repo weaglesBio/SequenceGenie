@@ -1,5 +1,7 @@
 FROM python:3.7
 
+RUN apt-get -y update
+
 # Setup paths:
 ENV DIRPATH /sbc_ngs
 WORKDIR $DIRPATH
@@ -13,6 +15,8 @@ ARG SAMTOOLS_BIN="samtools-1.6.tar.bz2"
 ARG SAMTOOLS_VERSION="1.6"
 ARG BCFTOOLS_BIN="bcftools-1.6.tar.bz2"
 ARG BCFTOOLS_VERSION="1.6"
+ARG MINIMAP2_BIN="minimap2-2.24.tar.bz2"
+ARG MINIMAP2_VERSION="2.24"
 
 # Install libraries:
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -26,15 +30,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	zlib1g-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Download and install bwa:
-RUN curl -fsSL https://github.com/lh3/bwa/releases/download/v$BWA_VERSION/$BWA_BIN -o /opt/$BWA_BIN \
-	&& tar xjf /opt/$BWA_BIN -C /opt/ \
-	&& cd /opt/bwa-$BWA_VERSION \
-	&& pwd \
-	&& ls -l \
+# Download and install minimap2:
+RUN curl -fsSL https://github.com/lh3/minimap2/releases/download/v$MINIMAP2_VERSION/$MINIMAP2_BIN -o /opt/$MINIMAP2_BIN \
+    && tar -jxvf /opt/$MINIMAP2_BIN -C /opt/ \
+	&& cd /opt/minimap2-$MINIMAP2_VERSION \
 	&& make \
-	&& mv bwa /usr/local/bin/ \
-	&& rm /opt/$BWA_BIN
+	&& cp minimap2 /usr/local/bin \
+	&& rm /opt/$MINIMAP2_BIN
+
+#RUN curl -fsSL https://github.com/lh3/bwa/releases/download/v$BWA_VERSION/$BWA_BIN -o /opt/$BWA_BIN \
+#	&& tar xjf /opt/$BWA_BIN -C /opt/ \
+#	&& cd /opt/bwa-$BWA_VERSION \
+#	&& pwd \
+#	&& ls -l \
+#	&& make \
+#	&& mv bwa /usr/local/bin/ \
+#	&& rm /opt/$BWA_BIN
 
 # Download and install samtools:
 RUN curl -fsSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/$SAMTOOLS_BIN -o /opt/$SAMTOOLS_BIN \

@@ -108,20 +108,25 @@ class ResultsThread(Thread):
 
 def add_summary(raw_summary_df):
     '''Add summary.'''
-    summary_df = raw_summary_df[['well', 'known_seq_id', 'matched_seq_id',
-                                 'identity', 'mutations', 'deletions',
-                                 'depths']]
+    #try:
+    #    summary_df = raw_summary_df[['well', 'known_seq_id', 'matched_seq_id','identity', 'mutations', 'deletions','depths']]
+    #except:
+    #    summary_df = raw_summary_df[['well', 'known_seq_id']]
+
+    summary_df = raw_summary_df[['well', 'known_seq_id', 'matched_seq_id','identity', 'mutations', 'deletions','depths']]
 
     summary_df = summary_df.iloc[
         summary_df.index.get_level_values('barcode_type') == 'sum']
 
     summary_df.index = summary_df.index.droplevel('barcode_type')
 
-    summary_df['mutations'] = summary_df['mutations'].apply(
-        lambda x: x if x and x != '[]' else np.nan)
+    if 'mutations' in summary_df:
+        summary_df['mutations'] = summary_df['mutations'].apply(
+            lambda x: x if x and x != '[]' else np.nan)
 
-    summary_df['deletions'] = summary_df['deletions'].apply(
-        lambda x: x if x and x != '[]' else np.nan)
+    if 'deletions' in summary_df:
+        summary_df['deletions'] = summary_df['deletions'].apply(
+            lambda x: x if x and x != '[]' else np.nan)
 
     return summary_df
 

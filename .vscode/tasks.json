@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "docker-build",
+            "label": "docker-build",
+            "platform": "python",
+            "dockerBuild": {
+                "tag": "sequencegenie:latest",
+                "dockerfile": "${workspaceFolder}/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: debug",
+            "dependsOn": [
+                "docker-build"
+            ],
+            "python": {
+                "args": ["pathway","/sbc_ngs/example/fasta/results","/sbc_ngs/example/fasta/data","1000","8000","8","0","/sbc_ngs/example/fasta/seqs/"],
+                "file": "app.py"
+            }
+        }
+    ]
+}

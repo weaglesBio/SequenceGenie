@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Docker: Python - General",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    },
+                    {
+                        "localRoot": "/home/will/Source/SequenceGenie/example/fasta/results",
+                        "remoteRoot": "/sbc_ngs/example/fasta/results"
+                    },
+                    {
+                        "localRoot": "/home/will/Source/SequenceGenie/example/fasta/data",
+                        "remoteRoot": "/sbc_ngs/example/fasta/data"
+                    },
+                    {
+                        "localRoot": "/home/will/Source/SequenceGenie/example/fasta/seqs",
+                        "remoteRoot": "/sbc_ngs/example/fasta/seqs"
+                    },
+                ],
+                "projectType": "general"
+            }
+        }
+    ]
+}

@@ -48,8 +48,8 @@ class PathwayAligner():
             self.__barcodes_df['known_seq_id'].astype(str)
 
         # Index sequence / template files:
-        for templ_filename in self.__seq_files.values():
-            subprocess.call(['bwa', 'index', templ_filename])
+        #for templ_filename in self.__seq_files.values():
+        #    subprocess.call(['bwa', 'index', templ_filename])
 
     def score_alignments(self, tolerance, num_threads):
         '''Score alignments.'''
@@ -113,12 +113,20 @@ def _score_alignment(dir_name, barcodes, reads_filename, seq_files,
         bam_filename = os.path.join(barcode_dir_name, '%s.bam' % barcodes[2])
         vcf_filename = bam_filename.replace('.bam', '.vcf')
 
-        prc = subprocess.Popen(('bwa', 'mem',
-                                '-x', 'ont2d',
-                                '-O', '6',
+        #prc = subprocess.Popen(('bwa', 'mem',
+        #                        '-x', 'ont2d',
+        #                        '-O', '6',
+        #                        '-t', str(num_threads),
+        #                        seq_filename, reads_filename),
+        #                       stdout=subprocess.PIPE)
+
+        prc = subprocess.Popen(('minimap2', '-a',
+                                '-x', 'map-ont',
+                               # '-O', '6',
                                 '-t', str(num_threads),
                                 seq_filename, reads_filename),
                                stdout=subprocess.PIPE)
+
 
         subprocess.check_output(('samtools', 'sort',
                                  '-@%i' % num_threads,
